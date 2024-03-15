@@ -1,0 +1,66 @@
+server:
+  port: 9005
+spring:
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    password: Manasa@1998
+    url: jdbc:mysql://localhost:3306/Employee
+    username: root
+  application:
+   name: employee-api
+  boot:
+    admin:
+      client:
+        url: http://localhost:1111/
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  mvc:
+    pathmatch:
+      matching-strategy: ant-path-matcher
+springdoc:
+  swagger-ui:
+     path: swagger-ui.html
+#    path: swagger-ui.html
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+       defaultZone: http://localhost:8761/eureka/
+  instance:
+    hostname: localhost
+
+management:
+   endpoints:
+    web:
+     exposure:
+      include: health
+   health:
+    circuitbreakers:
+      enabled: true
+   endpoint:
+     health:
+       show-details: always
+   tracing:
+    sampling:
+      probability: 1.0
+resilience4j:
+  retry:
+    instances:
+      mobileRetry:
+        max-attempts: 3
+        wait-duration: 5s
+  circuitbreaker:
+    instances:
+      mobileBreaker:
+        register-health-indicator: true
+        event-consumer-buffer-size: 10
+        failure-rate-threshold: 50
+        minimum-number-of-calls: 5
+        automatic-transition-from-open-to-half-open-enabled: true
+        wait-duration-in-open-state: 6s
+        permitted-number-of-calls-in-half-open-state: 3
+        sliding-window-size: 10
+        sliding-window-type: count-based
